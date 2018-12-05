@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".Fragment.ProfileFragment">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/heder" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_choose_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignStart="@+id/text_choose_avatar"
+            android:layout_alignLeft="@+id/text_choose_avatar"
+            android:layout_marginLeft="147dp"
+            android:layout_marginRight="-140dp"
+            android:layout_marginTop="130dp"
+            android:src="@drawable/cwm_logo" />
+
+    <TextView
+        android:id="@+id/text_choose_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="230dp"
+        android:layout_marginRight="-140dp"
+        android:layout_marginBottom="100dp"
+        android:text="Choose an avatar"
+        android:textColor="@color/Black"
+        android:textStyle="bold" />
+
+
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="508dp">
+
+    </FrameLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragment.HomeFragment">
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/chatrooms_recycler_view">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+<!-- gone this FloatingActionButtin -->
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        android:elevation="6dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_add_white_24dp"
+        android:id="@+id/fab_create_chatroom"/>
+<!-- ـــــــــــــــــــــــــــــــــــــــــــــــــ ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ -->
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/gps_help"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginRight="140dp"
+        android:background="@drawable/ic_help_p"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/help"
+        app:layout_constraintBottom_toBottomOf="@+id/gps_help"
+        app:layout_constraintEnd_toEndOf="@+id/gps_help"
+        app:layout_constraintStart_toStartOf="@+id/gps_help"
+        app:layout_constraintTop_toTopOf="@+id/gps_help"
+        app:layout_constraintVertical_bias="0.459"
+        tools:ignore="MissingConstraints" />
+
+</android.support.constraint.ConstraintLayout>
