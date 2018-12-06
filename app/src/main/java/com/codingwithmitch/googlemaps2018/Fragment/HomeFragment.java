@@ -31,6 +31,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.codingwithmitch.googlemaps2018.Notifications.Client;
+import com.codingwithmitch.googlemaps2018.Notifications.Data;
+import com.codingwithmitch.googlemaps2018.Notifications.MyResponse;
+import com.codingwithmitch.googlemaps2018.Notifications.Sender;
+import com.codingwithmitch.googlemaps2018.Notifications.Token;
 import com.codingwithmitch.googlemaps2018.R;
 import com.codingwithmitch.googlemaps2018.UserClient;
 import com.codingwithmitch.googlemaps2018.adapters.ChatroomRecyclerAdapter;
@@ -49,6 +54,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -67,6 +79,10 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.codingwithmitch.googlemaps2018.Constants.ERROR_DIALOG_REQUEST;
@@ -94,12 +110,22 @@ public class HomeFragment extends Fragment implements
     private boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;
     private UserLocation mUserLocation;
-
+    APIService apiService;
+    String userid;
+    boolean notify = false;
+    private FirebaseUser fuser;
+    private FirebaseAuth mAuth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        fuser = mAuth.getInstance().getCurrentUser();
+
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
 
         mProgressBar = view.findViewById(R.id.progressBar);
         mChatroomRecyclerView = view.findViewById(R.id.chatrooms_recycler_view);
@@ -439,7 +465,7 @@ public class HomeFragment extends Fragment implements
     }
 
     private void newChatroomHelp() {
-
+        //sendNotifiaction(userid,"*****","Help Me");
         String help = "help_" + mUserLocation.getUser().getUsername() + "_" +
                 String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
         buildNewChatroom(help);
@@ -514,5 +540,59 @@ public class HomeFragment extends Fragment implements
         mProgressBar.setVisibility(View.GONE);
     }
 
+
+
+    private void sendNotifiaction(final String receiver, final String username, final String message) {
+
+        final String rec = receiver;
+
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    final Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(fuser.getUid(), R.drawable.ic_stat_name,
+                            username + ": " + message, "Booking",
+                            receiver);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    System.out.println("D push noti method: token :" + token.getToken() +
+                            ",,,  userid:" + userid +
+                            ",,,  reciever: " + rec +
+                            ",,, fuser-sender : " + fuser.getUid()
+                    );
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.code() == 200) {
+                                        if (response.body().success != 1) {
+                                            Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                    break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
 }

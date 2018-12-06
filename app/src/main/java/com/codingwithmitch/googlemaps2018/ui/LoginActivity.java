@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.codingwithmitch.googlemaps2018.Notifications.Token;
 import com.codingwithmitch.googlemaps2018.R;
 import com.codingwithmitch.googlemaps2018.UserClient;
 import com.codingwithmitch.googlemaps2018.models.User;
@@ -20,10 +22,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -35,7 +40,8 @@ public class LoginActivity extends AppCompatActivity implements
 
     //Firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private FirebaseAuth mAuth;
+    private FirebaseUser fuser;
     // widgets
     private EditText mEmail, mPassword;
     private ProgressBar mProgressBar;
@@ -47,14 +53,25 @@ public class LoginActivity extends AppCompatActivity implements
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mProgressBar = findViewById(R.id.progressBar);
+        mAuth = FirebaseAuth.getInstance();
+        //get my image
 
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        if(fuser!= null){
+
+            updateToken(FirebaseInstanceId.getInstance().getToken());
+        }
         setupFirebaseAuth();
         findViewById(R.id.email_sign_in_button).setOnClickListener(this);
         findViewById(R.id.link_register).setOnClickListener(this);
 
         hideSoftKeyboard();
     }
-
+    private void updateToken(String token) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(fuser.getUid()).setValue(token1);
+    }
 
 
 

@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -38,8 +41,9 @@ public class RegisterActivity extends AppCompatActivity implements
 
     //vars
     private FirebaseFirestore mDb;
-
-
+    FirebaseAuth mAuth;
+    DatabaseReference databaseUserReg;
+    FirebaseUser fuser;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +56,8 @@ public class RegisterActivity extends AppCompatActivity implements
         findViewById(R.id.btn_register).setOnClickListener(this);
 
         mDb = FirebaseFirestore.getInstance();
-
+        mAuth = FirebaseAuth.getInstance();
+        databaseUserReg = FirebaseDatabase.getInstance().getReference("user_data");
         hideSoftKeyboard();
     }
 
